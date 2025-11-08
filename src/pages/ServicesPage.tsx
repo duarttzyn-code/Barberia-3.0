@@ -29,54 +29,54 @@ export function ServicesPage({ onNavigate }: { onNavigate: (page: string, id?: s
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 py-12">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black py-12">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-12">
-          <div className="inline-block bg-blue-600 p-4 rounded-full mb-4">
-            <Scissors className="w-12 h-12 text-white" />
+          <div className="inline-block bg-gradient-to-br from-yellow-500 to-yellow-600 p-4 rounded-full mb-4">
+            <Scissors className="w-12 h-12 text-gray-900" />
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          <h1 className="text-4xl font-bold text-white mb-4">
             Nossos Serviços
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
             Escolha o serviço ideal para você e agende seu horário
           </p>
         </div>
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">Carregando serviços...</p>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500"></div>
+            <p className="mt-4 text-gray-400">Carregando serviços...</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {services.map((service) => (
               <div
                 key={service.id}
-                className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all border border-gray-100 dark:border-gray-700 overflow-hidden"
+                className="bg-gray-800/50 rounded-2xl shadow-lg hover:shadow-xl transition-all border border-yellow-600/30 hover:border-yellow-500/50 overflow-hidden group"
               >
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                    <h3 className="text-xl font-bold text-white">
                       {service.name}
                     </h3>
-                    <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
-                      <Scissors className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                    <div className="bg-gradient-to-br from-yellow-500/20 to-yellow-600/20 p-2 rounded-lg group-hover:from-yellow-500/30 group-hover:to-yellow-600/30 transition-all">
+                      <Scissors className="w-6 h-6 text-yellow-500" />
                     </div>
                   </div>
 
-                  <p className="text-gray-600 dark:text-gray-300 mb-6 min-h-[48px]">
+                  <p className="text-gray-300 mb-6 min-h-[48px]">
                     {service.description}
                   </p>
 
-                  <div className="flex items-center justify-between mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
-                    <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
-                      <Clock className="w-5 h-5" />
+                  <div className="flex items-center justify-between mb-6 pb-6 border-b border-yellow-600/20">
+                    <div className="flex items-center space-x-2 text-gray-400">
+                      <Clock className="w-5 h-5 text-yellow-500" />
                       <span className="text-sm">{service.duration_minutes} min</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <DollarSign className="w-5 h-5 text-green-600 dark:text-green-400" />
-                      <span className="text-2xl font-bold text-gray-900 dark:text-white">
+                      <DollarSign className="w-5 h-5 text-yellow-500" />
+                      <span className="text-2xl font-bold text-yellow-400">
                         R$ {service.price.toFixed(2)}
                       </span>
                     </div>
@@ -84,7 +84,7 @@ export function ServicesPage({ onNavigate }: { onNavigate: (page: string, id?: s
 
                   <button
                     onClick={() => onNavigate('booking', service.id)}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center space-x-2 transition-colors"
+                    className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 px-6 py-3 rounded-lg font-semibold flex items-center justify-center space-x-2 transition-all transform group-hover:scale-105"
                   >
                     <Calendar className="w-5 h-5" />
                     <span>Agendar Agora</span>
@@ -97,7 +97,7 @@ export function ServicesPage({ onNavigate }: { onNavigate: (page: string, id?: s
 
         {!loading && services.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-gray-400">
               Nenhum serviço disponível no momento.
             </p>
           </div>
