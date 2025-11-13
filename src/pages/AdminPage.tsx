@@ -14,6 +14,8 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed' | 'cancelled'>('all');
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -51,6 +53,7 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
   }
 
   async function updateAppointmentStatus(id: string, status: 'confirmed' | 'cancelled') {
+    setUpdatingId(id);
     try {
       const { error } = await supabase
         .from('appointments')
@@ -59,9 +62,16 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
 
       if (error) throw error;
       await loadAppointments();
+
+      const statusLabel = status === 'confirmed' ? 'confirmado' : 'cancelado';
+      setFeedback({ type: 'success', message: `Agendamento ${statusLabel} com sucesso!` });
+      setTimeout(() => setFeedback(null), 3000);
     } catch (error) {
       console.error('Error updating appointment:', error);
-      alert('Erro ao atualizar agendamento');
+      setFeedback({ type: 'error', message: 'Erro ao atualizar agendamento. Tente novamente.' });
+      setTimeout(() => setFeedback(null), 3000);
+    } finally {
+      setUpdatingId(null);
     }
   }
 
@@ -96,6 +106,13 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 py-12">
+      {feedback && (
+        <div className={`fixed top-4 right-4 px-4 py-3 rounded-lg text-white font-medium z-50 ${
+          feedback.type === 'success' ? 'bg-green-600' : 'bg-red-600'
+        }`}>
+          {feedback.message}
+        </div>
+      )}
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
           <div>
@@ -261,15 +278,17 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
                       <div className="flex flex-row lg:flex-col gap-2">
                         <button
                           onClick={() => updateAppointmentStatus(appointment.id, 'confirmed')}
-                          className="flex-1 lg:flex-none px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors"
+                          disabled={updatingId !== null}
+                          className="flex-1 lg:flex-none px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white rounded-lg text-sm font-medium transition-colors disabled:cursor-not-allowed"
                         >
-                          Confirmar
+                          {updatingId === appointment.id ? 'Processando...' : 'Confirmar'}
                         </button>
                         <button
                           onClick={() => updateAppointmentStatus(appointment.id, 'cancelled')}
-                          className="flex-1 lg:flex-none px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
+                          disabled={updatingId !== null}
+                          className="flex-1 lg:flex-none px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-lg text-sm font-medium transition-colors disabled:cursor-not-allowed"
                         >
-                          Cancelar
+                          {updatingId === appointment.id ? 'Processando...' : 'Cancelar'}
                         </button>
                       </div>
                     )}
